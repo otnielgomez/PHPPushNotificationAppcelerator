@@ -5,14 +5,14 @@ $programado = $_POST["schedule"];
 $date = $_POST["date"];
 $time = $_POST["time"];
 
-$timeZone = new DateTimeZone("America/Monterrey");
+$timeZone = new DateTimeZone("America/Monterrey"); //***IMPORTANTE CAMBIAR LA ZONA HORARIA LOCAL
 $utc = new DateTimeZone("UTC");
 $fechaEnvio = new DateTime($date." ".$time, $timeZone);
 $fechaEnvio->setTimezone($utc);
 if ($titulo && $mensaje) {
-    $Curl_Session1 = curl_init('https://api.cloud.appcelerator.com/v1/users/login.json?key=<KEY>');
+    $Curl_Session1 = curl_init('https://api.cloud.appcelerator.com/v1/users/login.json?key=<KEY>'); //CAMBIAR <KEY> POR EL APP KEY
     curl_setopt ($Curl_Session1, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt ($Curl_Session1, CURLOPT_POSTFIELDS, "login=<ADMIN EMAIL>&password=<ADMIN PASSWORD>");
+    curl_setopt ($Curl_Session1, CURLOPT_POSTFIELDS, "login=<ADMIN EMAIL>&password=<ADMIN PASSWORD>"); //CAMBIAR <ADMIN EMAIL> Y <ADMIN PASSWORD>
     $res = curl_exec ($Curl_Session1);
     $session = json_decode($res);
     if ($programado === "false") {
@@ -24,9 +24,9 @@ if ($titulo && $mensaje) {
         $payload->vibrate = true;
         $payload->sound = "default";
         $obj->payload = $payload;
-        $Curl_Session2 = curl_init('https://api.cloud.appcelerator.com/v1/push_notification/notify.json?key=<KEY>&_session_id='.$session->meta->session_id);
+        $Curl_Session2 = curl_init('https://api.cloud.appcelerator.com/v1/push_notification/notify.json?key=<KEY>&_session_id='.$session->meta->session_id); //CAMBIAR <KEY> POR EL APP KEY
         curl_setopt ($Curl_Session2, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt ($Curl_Session2, CURLOPT_POSTFIELDS, "payload=".json_encode($obj->payload)."&channel=news_alerts&to_ids=everyone");
+        curl_setopt ($Curl_Session2, CURLOPT_POSTFIELDS, "payload=".json_encode($obj->payload)."&channel=news_alerts&to_ids=everyone"); //CAMBIAR channel O to_ids SEGUN SE REQUIERA
     }else{
         //SE PROGRAMA NOTIFICACION
         $payload->title = $titulo;
@@ -41,7 +41,7 @@ if ($titulo && $mensaje) {
         $schedule->start_time = $fechaEnvio->format('Y-m-d\TH:i');
         $schedule->push_notification = $push_notification;
         $obj->schedule = $schedule;
-        $Curl_Session2 = curl_init('https://api.cloud.appcelerator.com/v1/push_schedules/create.json?key=<KEY>&_session_id='.$session->meta->session_id);
+        $Curl_Session2 = curl_init('https://api.cloud.appcelerator.com/v1/push_schedules/create.json?key=<KEY>&_session_id='.$session->meta->session_id); //CAMBIAR <KEY> POR EL APP KEY
         curl_setopt ($Curl_Session2, CURLOPT_RETURNTRANSFER, true);
         curl_setopt ($Curl_Session2, CURLOPT_POSTFIELDS, "schedule=".json_encode($obj->schedule)."");
     }
@@ -78,7 +78,7 @@ if ($titulo && $mensaje) {
                   Se envio el mensaje. :D
                 </div>
                 <div style="margin-top:15px;">
-                    Si no eres redirijido en <label id="numero">10</label>, da click <a href="http://gomezz.info/pushNotifications/enviar.html">aqui</a>
+                    Si no eres redirijido en <label id="numero">10</label>, da click <a href="<URL>/enviar.html">aqui</a> <!--CAMBIAR <URL> POR DONDE SE ENCUENTRE HOSPEDADO -->
                 </div>
             </div>
             <script type="text/javascript">
@@ -88,7 +88,7 @@ if ($titulo && $mensaje) {
                     segundos = numero - 1;
                     document.getElementById('numero').innerText = segundos;
                     if (segundos == 1) {
-                        window.location = "http://gomezz.info/pushNotifications/enviar.html"
+                        window.location = "<URL>/enviar.html" //CAMBIAR <URL> POR DONDE SE ENCUENTRE HOSPEDADO
                     };
                 }, 1000);
             </script>
@@ -100,7 +100,7 @@ if ($titulo && $mensaje) {
                   <?=$response->message?>
                 </div>
                 <div style="margin-top:15px;">
-                    <a href="http://gomezz.info/pushNotifications/enviar.html">Volver a intentar</a>
+                    <a href="<URL>/enviar.html">Volver a intentar</a> <!--CAMBIAR <URL> POR DONDE SE ENCUENTRE HOSPEDADO -->
                 </div>
             </div>
         <? endif ?>
